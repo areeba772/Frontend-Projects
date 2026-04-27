@@ -1,0 +1,2780 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glazed & Dazed — Artisan Donuts</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --pink: #e8436a;
+        --pink2: #ff6b8a;
+        --pink-light: #d04f69;
+        --brown: #2c1503;
+        --brown2: #5c3317;
+        --caramel: #d4874a;
+        --cream: #b77c9e;
+        --cream2: #f8c68d;
+        --white: #ffffff;
+        --text: #1e0e00;
+        --muted: #100701;
+        --border: #f0d5c0;
+        --input: #fff5ee;
+        --success: #2e7d32;
+        --success-bg: #e8f5e9;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--cream);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── PAGE SYSTEM ── */
+      .page {
+        display: none;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+      .page.active {
+        display: flex;
+      }
+
+      /* ══════════════════════════════
+   NAVBAR
+══════════════════════════════ */
+      #navbar {
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        height: 70px;
+        display: flex;
+        align-items: center;
+        padding: 0 2rem;
+        gap: 1.5rem;
+      }
+      .nav-brand {
+        font-family: "Fraunces", serif;
+        font-size: 1.45rem;
+        color: var(--pink);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        margin-right: auto;
+      }
+      .nav-brand span {
+        font-size: 1.6rem;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+      }
+      .nav-link {
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: var(--brown2);
+        transition: all 0.18s;
+        white-space: nowrap;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .nav-link:hover {
+        background: var(--pink-light);
+        color: var(--pink);
+      }
+      .nav-link.active-link {
+        color: var(--pink);
+        background: var(--pink-light);
+      }
+      #cart-nav-btn {
+        position: relative;
+        padding: 8px 16px;
+        border-radius: 10px;
+        background: var(--pink-light);
+        color: var(--pink);
+        font-weight: 600;
+        font-size: 0.88rem;
+      }
+      #cart-nav-btn:hover {
+        background: var(--pink);
+        color: #fff;
+      }
+      #cart-count {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: var(--pink);
+        color: #fff;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        border: 2px solid #fff;
+        display: none;
+      }
+      .nav-auth {
+        display: flex;
+        gap: 8px;
+      }
+      .nbtn {
+        padding: 8px 18px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        transition: all 0.18s;
+      }
+      .nbtn-out {
+        background: transparent;
+        border: 1.5px solid var(--pink);
+        color: var(--pink);
+      }
+      .nbtn-out:hover {
+        background: var(--pink-light);
+      }
+      .nbtn-fill {
+        background: var(--pink);
+        color: #fff;
+      }
+      .nbtn-fill:hover {
+        background: #c52d52;
+      }
+      #nav-user-info {
+        font-size: 0.82rem;
+        color: var(--muted);
+        font-weight: 500;
+        display: none;
+        align-items: center;
+        gap: 6px;
+      }
+      #nav-user-info .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--pink);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      /* Hamburger */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 4px;
+        border: none;
+        background: none;
+      }
+      .hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--brown2);
+        border-radius: 2px;
+        transition: 0.2s;
+      }
+      .mob-menu {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        z-index: 199;
+        padding: 1rem;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .mob-menu.open {
+        display: flex;
+      }
+      .mob-link {
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-weight: 500;
+        color: var(--brown2);
+        cursor: pointer;
+        transition: 0.15s;
+        font-size: 0.9rem;
+      }
+      .mob-link:hover {
+        background: var(--pink-light);
+        color: var(--pink);
+      }
+
+      @media (max-width: 768px) {
+        .nav-links,
+        .nav-auth,
+        #nav-user-info {
+          display: none !important;
+        }
+        .hamburger {
+          display: flex;
+        }
+        #cart-nav-btn {
+          display: none;
+        }
+      }
+
+      /* ══════════════════════════════
+   HOME PAGE
+══════════════════════════════ */
+      .hero {
+        background: linear-gradient(135deg, #fce4ec 0%, var(--cream) 55%);
+        padding: 5rem 3rem 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2rem;
+        flex: 1;
+      }
+      .hero-content {
+        max-width: 560px;
+      }
+      .hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--pink);
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 50px;
+        margin-bottom: 1.5rem;
+      }
+      .hero-title {
+        font-family: "Fraunces", serif;
+        font-size: clamp(2.8rem, 5.5vw, 4.2rem);
+        line-height: 1.08;
+        color: var(--brown);
+        margin-bottom: 1.2rem;
+      }
+      .hero-title em {
+        color: var(--pink);
+        font-style: italic;
+      }
+      .hero-desc {
+        font-size: 1.05rem;
+        color: var(--muted);
+        line-height: 1.75;
+        margin-bottom: 2rem;
+        max-width: 440px;
+      }
+      .hero-btns {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn-p {
+        padding: 14px 32px;
+        border-radius: 50px;
+        border: none;
+        background: var(--pink);
+        color: #fff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .btn-p:hover {
+        background: #c52d52;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(232, 67, 106, 0.3);
+      }
+      .btn-s {
+        padding: 14px 32px;
+        border-radius: 50px;
+        border: 1.5px solid var(--brown2);
+        background: transparent;
+        color: var(--brown);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .btn-s:hover {
+        background: var(--brown);
+        color: #fff;
+      }
+      .hero-visual {
+        font-size: 10rem;
+        animation: float 3.5s ease-in-out infinite;
+        filter: drop-shadow(0 24px 48px rgba(232, 67, 106, 0.22));
+        line-height: 1;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-3deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(3deg);
+        }
+      }
+
+      /* Stats */
+      .stats {
+        background: var(--brown);
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0;
+      }
+      .stat-item {
+        padding: 2.5rem 3rem;
+        text-align: center;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .stat-item:last-child {
+        border-right: none;
+      }
+      .stat-num {
+        font-family: "Fraunces", serif;
+        font-size: 2.4rem;
+        color: var(--pink2);
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+      .stat-lbl {
+        font-size: 0.82rem;
+        color: rgba(255, 255, 255, 0.55);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+
+      /* Featured */
+      .section {
+        padding: 4.5rem 3rem;
+      }
+      .sec-head {
+        margin-bottom: 3rem;
+      }
+      .sec-tag {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--pink);
+        margin-bottom: 0.6rem;
+        display: block;
+      }
+      .sec-title {
+        font-family: "Fraunces", serif;
+        font-size: 2.2rem;
+        color: var(--brown);
+        line-height: 1.2;
+      }
+      .sec-sub {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+        line-height: 1.6;
+      }
+
+      .feat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 1.5rem;
+      }
+      .d-card {
+        background: var(--white);
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        padding: 1.6rem;
+        text-align: center;
+        transition: 0.25s;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+      .d-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(232, 67, 106, 0.04),
+          transparent
+        );
+        opacity: 0;
+        transition: 0.25s;
+      }
+      .d-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 50px rgba(232, 67, 106, 0.14);
+        border-color: var(--pink);
+      }
+      .d-card:hover::before {
+        opacity: 1;
+      }
+      .d-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: var(--caramel);
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 50px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .d-badge.new-b {
+        background: var(--pink);
+      }
+      .d-emoji {
+        font-size: 4.2rem;
+        display: block;
+        margin-bottom: 0.8rem;
+      }
+      .d-name {
+        font-family: "Fraunces", serif;
+        font-size: 1.15rem;
+        color: var(--brown);
+        margin-bottom: 0.4rem;
+      }
+      .d-desc {
+        font-size: 0.82rem;
+        color: var(--muted);
+        line-height: 1.55;
+        margin-bottom: 1.1rem;
+      }
+      .d-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .d-price {
+        font-weight: 700;
+        color: var(--pink);
+        font-size: 1.05rem;
+      }
+      .add-c {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--pink);
+        color: #fff;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+        line-height: 1;
+      }
+      .add-c:hover {
+        background: #c52d52;
+        transform: scale(1.1);
+      }
+
+      /* Why us */
+      .why {
+        background: var(--white);
+        padding: 4.5rem 3rem;
+      }
+      .why-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .why-card {
+        background: var(--cream2);
+        border-radius: 16px;
+        padding: 1.8rem;
+        border: 1px solid var(--border);
+      }
+      .why-icon {
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .why-title {
+        font-family: "Fraunces", serif;
+        font-size: 1.1rem;
+        color: var(--brown);
+        margin-bottom: 0.5rem;
+      }
+      .why-text {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* Reviews */
+      .rev-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .rev-card {
+        background: var(--white);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 1.6rem;
+      }
+      .stars {
+        color: var(--caramel);
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+      }
+      .rev-txt {
+        font-size: 0.88rem;
+        color: var(--text);
+        line-height: 1.65;
+        margin-bottom: 1rem;
+      }
+      .rev-author {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      /* CTA Banner */
+      .cta-band {
+        background: linear-gradient(135deg, var(--pink), #c52d52);
+        padding: 4rem 3rem;
+        text-align: center;
+        color: #fff;
+      }
+      .cta-band h2 {
+        font-family: "Fraunces", serif;
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+      }
+      .cta-band p {
+        opacity: 0.85;
+        margin-bottom: 2rem;
+        font-size: 1rem;
+      }
+      .cta-band .btn-p {
+        background: #fff;
+        color: var(--pink);
+      }
+      .cta-band .btn-p:hover {
+        background: var(--pink-light);
+        transform: translateY(-2px);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--brown);
+        color: rgba(255, 255, 255, 0.6);
+        padding: 3rem;
+      }
+      .foot-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2.5rem;
+      }
+      @media (max-width: 700px) {
+        .foot-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .foot-brand {
+        font-family: "Fraunces", serif;
+        font-size: 1.4rem;
+        color: var(--pink2);
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .foot-about {
+        font-size: 0.85rem;
+        line-height: 1.7;
+        max-width: 260px;
+      }
+      .foot-col h4 {
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
+      .foot-col a {
+        display: block;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.55);
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: 0.15s;
+      }
+      .foot-col a:hover {
+        color: var(--pink2);
+      }
+      .foot-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+      }
+      .foot-bottom span {
+        color: var(--pink2);
+      }
+
+      /* ══════════════════════════════
+   MENU PAGE
+══════════════════════════════ */
+      .page-hero {
+        background: linear-gradient(135deg, #fce4ec, var(--cream));
+        padding: 3.5rem 3rem 2.5rem;
+      }
+      .page-hero h1 {
+        font-family: "Fraunces", serif;
+        font-size: 2.8rem;
+        color: var(--brown);
+        margin-bottom: 0.5rem;
+      }
+      .page-hero p {
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      .menu-filters {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        padding: 1.5rem 3rem;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 70px;
+        z-index: 10;
+      }
+      .filter-btn {
+        padding: 8px 18px;
+        border-radius: 50px;
+        border: 1.5px solid var(--border);
+        background: var(--white);
+        color: var(--brown2);
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.18s;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: var(--pink);
+        border-color: var(--pink);
+        color: #fff;
+      }
+
+      .menu-body {
+        padding: 2.5rem 3rem 4rem;
+      }
+      .menu-section-title {
+        font-family: "Fraunces", serif;
+        font-size: 1.5rem;
+        color: var(--brown);
+        margin: 2rem 0 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .menu-section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.3rem;
+      }
+
+      /* ══════════════════════════════
+   CART PAGE
+══════════════════════════════ */
+      .cart-wrap {
+        padding: 3rem;
+        max-width: 900px;
+        margin: 0 auto;
+        width: 100%;
+        flex: 1;
+      }
+      .cart-wrap h1 {
+        font-family: "Fraunces", serif;
+        font-size: 2.2rem;
+        color: var(--brown);
+        margin-bottom: 2rem;
+      }
+      .cart-empty {
+        text-align: center;
+        padding: 4rem;
+        color: var(--muted);
+      }
+      .cart-empty .empty-icon {
+        font-size: 5rem;
+        display: block;
+        margin-bottom: 1rem;
+      }
+      .cart-empty p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      #cart-items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .cart-item {
+        background: var(--white);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.2rem 1.5rem;
+      }
+      .ci-emoji {
+        font-size: 2.8rem;
+        flex-shrink: 0;
+      }
+      .ci-info {
+        flex: 1;
+      }
+      .ci-name {
+        font-family: "Fraunces", serif;
+        font-size: 1rem;
+        color: var(--brown);
+        margin-bottom: 0.2rem;
+      }
+      .ci-price {
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .ci-qty {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .qty-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1.5px solid var(--border);
+        background: var(--white);
+        color: var(--brown);
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .qty-btn:hover {
+        background: var(--pink);
+        border-color: var(--pink);
+        color: #fff;
+      }
+      .qty-num {
+        font-weight: 700;
+        min-width: 20px;
+        text-align: center;
+        font-size: 0.9rem;
+      }
+      .ci-total {
+        font-weight: 700;
+        color: var(--pink);
+        min-width: 70px;
+        text-align: right;
+      }
+      .ci-del {
+        background: none;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 1.1rem;
+        padding: 4px;
+        transition: 0.15s;
+      }
+      .ci-del:hover {
+        color: #c62828;
+      }
+      .cart-summary {
+        background: var(--white);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 0.7rem;
+      }
+      .summary-row.total {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--brown);
+        border-top: 1px solid var(--border);
+        padding-top: 0.7rem;
+        margin-top: 0.3rem;
+      }
+      .cart-checkout-btn {
+        width: 100%;
+        padding: 14px;
+        border-radius: 50px;
+        border: none;
+        background: var(--pink);
+        color: #fff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+        margin-top: 1rem;
+      }
+      .cart-checkout-btn:hover {
+        background: #c52d52;
+      }
+
+      /* ══════════════════════════════
+   CHECKOUT PAGE
+══════════════════════════════ */
+      .checkout-wrap {
+        padding: 3rem;
+        max-width: 1000px;
+        margin: 0 auto;
+        width: 100%;
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 2rem;
+      }
+      @media (max-width: 700px) {
+        .checkout-wrap {
+          grid-template-columns: 1fr;
+        }
+      }
+      .checkout-left h1 {
+        font-family: "Fraunces", serif;
+        font-size: 1.8rem;
+        color: var(--brown);
+        margin-bottom: 2rem;
+      }
+      .form-section {
+        background: var(--white);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        margin-bottom: 1.2rem;
+      }
+      .form-section h3 {
+        font-family: "Fraunces", serif;
+        font-size: 1.05rem;
+        color: var(--brown);
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .f-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+      .f-group {
+        margin-bottom: 0.9rem;
+      }
+      .f-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--brown2);
+        margin-bottom: 0.35rem;
+      }
+      .f-group input,
+      .f-group select,
+      .f-group textarea {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        background: var(--input);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.9rem;
+        color: var(--text);
+        outline: none;
+        transition: 0.2s;
+      }
+      .f-group input:focus,
+      .f-group select:focus,
+      .f-group textarea:focus {
+        border-color: var(--pink);
+      }
+      .f-group input::placeholder,
+      .f-group textarea::placeholder {
+        color: #c8a898;
+      }
+      .f-group textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+      .payment-opts {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .pay-opt {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1.5px solid var(--border);
+        cursor: pointer;
+        transition: 0.15s;
+      }
+      .pay-opt:hover,
+      .pay-opt.selected {
+        border-color: var(--pink);
+        background: var(--pink-light);
+      }
+      .pay-opt input[type="radio"] {
+        accent-color: var(--pink);
+        width: 16px;
+        height: 16px;
+      }
+      .pay-opt-label {
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: var(--brown);
+      }
+      .pay-icon {
+        font-size: 1.2rem;
+      }
+
+      .checkout-right {
+        padding-top: 3.6rem;
+      }
+      .order-summary {
+        background: var(--white);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        position: sticky;
+        top: 90px;
+      }
+      .order-summary h3 {
+        font-family: "Fraunces", serif;
+        font-size: 1.1rem;
+        color: var(--brown);
+        margin-bottom: 1.2rem;
+      }
+      .os-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border);
+        color: var(--muted);
+      }
+      .os-item:last-of-type {
+        border: none;
+      }
+      .os-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--brown);
+        border-top: 2px solid var(--border);
+        padding-top: 0.8rem;
+        margin-top: 0.4rem;
+      }
+      .place-order-btn {
+        width: 100%;
+        padding: 14px;
+        border-radius: 50px;
+        border: none;
+        background: var(--pink);
+        color: #fff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+        margin-top: 1rem;
+      }
+      .place-order-btn:hover {
+        background: #c52d52;
+      }
+      .secure-note {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 0.8rem;
+      }
+
+      /* Order success */
+      #order-success-screen {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 4rem 2rem;
+        flex: 1;
+      }
+      #order-success-screen.show {
+        display: flex;
+      }
+      .success-donut {
+        font-size: 6rem;
+        margin-bottom: 1.5rem;
+        animation: float 3s ease-in-out infinite;
+      }
+      #order-success-screen h2 {
+        font-family: "Fraunces", serif;
+        font-size: 2.2rem;
+        color: var(--brown);
+        margin-bottom: 0.8rem;
+      }
+      #order-success-screen p {
+        color: var(--muted);
+        margin-bottom: 2rem;
+        font-size: 1rem;
+        max-width: 380px;
+      }
+
+      /* ══════════════════════════════
+   ABOUT PAGE
+══════════════════════════════ */
+      .about-hero {
+        background: linear-gradient(135deg, #fce4ec, var(--cream));
+        padding: 5rem 3rem;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 3rem;
+      }
+      .about-hero-text {
+        max-width: 540px;
+      }
+      .about-hero-text h1 {
+        font-family: "Fraunces", serif;
+        font-size: clamp(2.4rem, 4vw, 3.4rem);
+        color: var(--brown);
+        margin-bottom: 1.2rem;
+        line-height: 1.1;
+      }
+      .about-hero-text p {
+        font-size: 1rem;
+        color: var(--muted);
+        line-height: 1.75;
+        margin-bottom: 1.5rem;
+      }
+      .about-hero-visual {
+        font-size: 8rem;
+        animation: float 3.5s ease-in-out infinite;
+      }
+
+      .about-story {
+        padding: 4.5rem 3rem;
+        background: var(--white);
+      }
+      .about-story p {
+        font-size: 1rem;
+        color: var(--muted);
+        line-height: 1.8;
+        max-width: 680px;
+        margin-top: 1.5rem;
+      }
+
+      .team {
+        padding: 4.5rem 3rem;
+      }
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .team-card {
+        background: var(--white);
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        padding: 2rem 1.5rem;
+        text-align: center;
+        transition: 0.2s;
+      }
+      .team-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--pink);
+      }
+      .team-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: var(--pink);
+        color: #fff;
+        font-family: "Fraunces", serif;
+        font-size: 1.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+      }
+      .team-name {
+        font-family: "Fraunces", serif;
+        font-size: 1.05rem;
+        color: var(--brown);
+        margin-bottom: 0.3rem;
+      }
+      .team-role {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .values {
+        background: var(--white);
+        padding: 4.5rem 3rem;
+      }
+      .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+      .val-card {
+        background: var(--cream);
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid var(--border);
+      }
+      .val-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .val-title {
+        font-family: "Fraunces", serif;
+        font-size: 1rem;
+        color: var(--brown);
+        margin-bottom: 0.5rem;
+      }
+      .val-text {
+        font-size: 0.84rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* ══════════════════════════════
+   AUTH PAGES
+══════════════════════════════ */
+      .auth-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        flex: 1;
+      }
+      @media (max-width: 680px) {
+        .auth-wrap {
+          grid-template-columns: 1fr;
+        }
+      }
+      .auth-side {
+        background: linear-gradient(160deg, var(--pink) 0%, #9b1b45 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        text-align: center;
+      }
+      @media (max-width: 680px) {
+        .auth-side {
+          display: none;
+        }
+      }
+      .auth-side-donut {
+        font-size: 7rem;
+        margin-bottom: 1.5rem;
+        animation: float 3.5s ease-in-out infinite;
+      }
+      .auth-side h2 {
+        font-family: "Fraunces", serif;
+        font-size: 2rem;
+        color: #fff;
+        margin-bottom: 0.8rem;
+      }
+      .auth-side p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.92rem;
+        line-height: 1.65;
+        max-width: 280px;
+      }
+      .auth-form-side {
+        background: var(--white);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2.5rem;
+      }
+      .auth-box {
+        width: 100%;
+        max-width: 400px;
+      }
+      .auth-brand {
+        font-family: "Fraunces", serif;
+        font-size: 1.4rem;
+        color: var(--pink);
+        display: block;
+        margin-bottom: 2rem;
+      }
+      .auth-h {
+        font-family: "Fraunces", serif;
+        font-size: 1.9rem;
+        color: var(--brown);
+        margin-bottom: 0.4rem;
+      }
+      .auth-sub-text {
+        color: var(--muted);
+        font-size: 0.88rem;
+        margin-bottom: 2rem;
+      }
+      .f2-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+      .a-group {
+        margin-bottom: 1.1rem;
+      }
+      .a-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--brown2);
+        margin-bottom: 0.35rem;
+      }
+      .a-group input {
+        width: 100%;
+        padding: 11px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        background: var(--input);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.9rem;
+        color: var(--text);
+        outline: none;
+        transition: 0.2s;
+      }
+      .a-group input:focus {
+        border-color: var(--pink);
+      }
+      .a-group input::placeholder {
+        color: #c8a898;
+      }
+      .err {
+        color: #c62828;
+        font-size: 0.78rem;
+        margin-top: 0.3rem;
+        display: none;
+      }
+      .err.on {
+        display: block;
+      }
+      .succ-banner {
+        background: var(--success-bg);
+        border: 1px solid #a5d6a7;
+        color: var(--success);
+        border-radius: 10px;
+        padding: 11px 15px;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        display: none;
+      }
+      .succ-banner.on {
+        display: block;
+      }
+      .a-submit {
+        width: 100%;
+        padding: 13px;
+        border-radius: 50px;
+        border: none;
+        background: var(--pink);
+        color: #fff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+        margin-top: 0.4rem;
+        margin-bottom: 1.2rem;
+      }
+      .a-submit:hover {
+        background: #c52d52;
+        transform: translateY(-1px);
+      }
+      .a-switch {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .a-switch a {
+        color: var(--pink);
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .a-switch a:hover {
+        text-decoration: underline;
+      }
+      .divider-or {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        color: var(--muted);
+        font-size: 0.78rem;
+        margin: 1rem 0;
+      }
+      .divider-or::before,
+      .divider-or::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .chk-row {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 1rem;
+      }
+      .chk-row input {
+        accent-color: var(--pink);
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+      }
+      .chk-row label {
+        font-size: 0.82rem;
+        color: var(--muted);
+        cursor: pointer;
+      }
+
+      /* Toast */
+      #toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--brown);
+        color: #fff;
+        padding: 13px 24px;
+        border-radius: 50px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all 0.3s;
+        z-index: 9999;
+        pointer-events: none;
+        max-width: 280px;
+      }
+      #toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero {
+          padding: 3.5rem 1.5rem 3rem;
+        }
+        .section,
+        .why,
+        .menu-body,
+        .cart-wrap,
+        .about-hero,
+        .about-story,
+        .team,
+        .values {
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+        .menu-filters {
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+        .checkout-wrap {
+          padding: 1.5rem;
+          gap: 1.5rem;
+        }
+        .foot-grid {
+          padding: 0;
+        }
+        footer {
+          padding: 2rem 1.5rem;
+        }
+        .stat-item {
+          padding: 1.8rem 1.5rem;
+        }
+        .hero-visual {
+          font-size: 6rem;
+        }
+      }
+      @media (max-width: 500px) {
+        .f-row,
+        .f2-row {
+          grid-template-columns: 1fr;
+        }
+        .hero-btns {
+          flex-direction: column;
+        }
+        .btn-p,
+        .btn-s {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══════════ NAVBAR ══════════ -->
+    <nav id="navbar">
+      <div class="nav-brand" onclick="go('home')">
+        <span>🍩</span> Glazed & Dazed
+      </div>
+      <div class="nav-links" id="nav-links">
+        <button class="nav-link" onclick="go('home')" id="nl-home">Home</button>
+        <button class="nav-link" onclick="go('menu')" id="nl-menu">Menu</button>
+        <button class="nav-link" onclick="go('about')" id="nl-about">
+          About
+        </button>
+        <button
+          class="nav-link cart-nav-link"
+          id="cart-nav-btn"
+          onclick="go('cart')"
+        >
+          🛒 Cart <span id="cart-count">0</span>
+        </button>
+      </div>
+      <div class="nav-auth" id="nav-auth-btns">
+        <button class="nbtn nbtn-out" onclick="go('login')">Log In</button>
+        <button class="nbtn nbtn-fill" onclick="go('signup')">Sign Up</button>
+      </div>
+      <div id="nav-user-info">
+        <div class="avatar" id="user-avatar">U</div>
+        <span id="user-name-disp">User</span>
+        <button
+          class="nbtn nbtn-out"
+          style="margin-left: 6px"
+          onclick="logout()"
+        >
+          Log Out
+        </button>
+      </div>
+      <button class="hamburger" id="ham-btn" onclick="toggleMob()">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mob-menu" id="mob-menu">
+      <div
+        class="mob-link"
+        onclick="
+          go('home');
+          toggleMob();
+        "
+      >
+        🏠 Home
+      </div>
+      <div
+        class="mob-link"
+        onclick="
+          go('menu');
+          toggleMob();
+        "
+      >
+        🍩 Menu
+      </div>
+      <div
+        class="mob-link"
+        onclick="
+          go('about');
+          toggleMob();
+        "
+      >
+        💛 About
+      </div>
+      <div
+        class="mob-link"
+        onclick="
+          go('cart');
+          toggleMob();
+        "
+      >
+        🛒 Cart
+      </div>
+      <div
+        class="mob-link"
+        id="mob-login"
+        onclick="
+          go('login');
+          toggleMob();
+        "
+      >
+        🔐 Log In
+      </div>
+      <div
+        class="mob-link"
+        id="mob-signup"
+        onclick="
+          go('signup');
+          toggleMob();
+        "
+      >
+        ✨ Sign Up
+      </div>
+      <div
+        class="mob-link"
+        id="mob-logout"
+        style="display: none"
+        onclick="
+          logout();
+          toggleMob();
+        "
+      >
+        🚪 Log Out
+      </div>
+    </div>
+
+    <!-- ══════════ HOME PAGE ══════════ -->
+    <div class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-content">
+          <div class="hero-pill">🍩 Fresh Baked Daily</div>
+          <h1 class="hero-title">
+            Life's too short<br />to skip the <em>donut.</em>
+          </h1>
+          <p class="hero-desc">
+            Handcrafted artisan donuts made with pure butter, real cream, and
+            zero shortcuts. Order online for pickup or delivery across Lahore.
+          </p>
+          <div class="hero-btns">
+            <button class="btn-p" onclick="go('menu')">Order Now</button>
+            <button class="btn-s" onclick="go('about')">Our Story</button>
+          </div>
+        </div>
+        <div class="hero-visual">🍩</div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-num">50+</span
+          ><span class="stat-lbl">Flavours</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">15K+</span
+          ><span class="stat-lbl">Happy Customers</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">4.9★</span
+          ><span class="stat-lbl">Avg Rating</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">Since '09</span
+          ><span class="stat-lbl">Est. Lahore</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head">
+          <span class="sec-tag">Best Sellers</span>
+          <h2 class="sec-title">Today's Must-Try Picks</h2>
+          <p class="sec-sub">
+            Freshly made every morning — limited quantities. Order before
+            they're gone!
+          </p>
+        </div>
+        <div class="feat-grid" id="home-feat-grid"></div>
+        <div style="text-align: center; margin-top: 2.5rem">
+          <button class="btn-p" onclick="go('menu')">View Full Menu →</button>
+        </div>
+      </div>
+
+      <div class="why">
+        <div class="sec-head">
+          <span class="sec-tag">Why Us</span>
+          <h2 class="sec-title">Made Different, Tasted Better</h2>
+        </div>
+        <div class="why-grid">
+          <div class="why-card">
+            <span class="why-icon">🧈</span>
+            <div class="why-title">Real Butter Only</div>
+            <div class="why-text">
+              We never use margarine or shortcuts. Only pure, unsalted imported
+              butter goes into every batch.
+            </div>
+          </div>
+          <div class="why-card">
+            <span class="why-icon">🌿</span>
+            <div class="why-title">Natural Flavours</div>
+            <div class="why-text">
+              No artificial coloring or artificial flavoring. Every glaze starts
+              from real fruit, cocoa, or matcha.
+            </div>
+          </div>
+          <div class="why-card">
+            <span class="why-icon">🚴</span>
+            <div class="why-title">Same-Day Delivery</div>
+            <div class="why-text">
+              Order before 2pm and get your donuts delivered hot and fresh to
+              your door in Lahore.
+            </div>
+          </div>
+          <div class="why-card">
+            <span class="why-icon">♻️</span>
+            <div class="why-title">Eco Packaging</div>
+            <div class="why-text">
+              All our boxes are 100% compostable. We care about the planet as
+              much as we care about the glaze.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="background: var(--white)">
+        <div class="sec-head">
+          <span class="sec-tag">Reviews</span>
+          <h2 class="sec-title">Our Customers Say It Best</h2>
+        </div>
+        <div class="rev-grid">
+          <div class="rev-card">
+            <div class="stars">★★★★★</div>
+            <p class="rev-txt">
+              "Honestly the best donuts I've had outside New York. The Choco
+              Bliss is dangerously addictive — I ordered a box of 6 and finished
+              it in one sitting!"
+            </p>
+            <div class="rev-author">— Ayesha R., Lahore</div>
+          </div>
+          <div class="rev-card">
+            <div class="stars">★★★★★</div>
+            <p class="rev-txt">
+              "We ordered for our entire office — 30 people — and not a single
+              crumb was left. Will definitely be ordering monthly now. Fast
+              delivery too!"
+            </p>
+            <div class="rev-author">— Usman K., Karachi</div>
+          </div>
+          <div class="rev-card">
+            <div class="stars">★★★★☆</div>
+            <p class="rev-txt">
+              "The Matcha Zen is my absolute favourite donut on the planet.
+              Delivery was fast and the packaging kept everything perfectly
+              fresh."
+            </p>
+            <div class="rev-author">— Sana M., Islamabad</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-band">
+        <h2>Ready to treat yourself? 🍩</h2>
+        <p>Join 15,000+ donut lovers. First-time order gets free delivery!</p>
+        <button class="btn-p" onclick="go('signup')">
+          Create Free Account
+        </button>
+      </div>
+
+      <footer>
+        <div style="max-width: 1200px; margin: 0 auto">
+          <div class="foot-grid">
+            <div>
+              <div class="foot-brand">🍩 Glazed & Dazed</div>
+              <div class="foot-about">
+                Artisan donuts handcrafted every morning since 2009. Born in
+                Lahore, loved across Pakistan.
+              </div>
+            </div>
+            <div class="foot-col">
+              <h4>Quick Links</h4>
+              <a onclick="go('home')">Home</a>
+              <a onclick="go('menu')">Menu</a>
+              <a onclick="go('about')">About Us</a>
+              <a onclick="go('cart')">Cart</a>
+            </div>
+            <div class="foot-col">
+              <h4>Account</h4>
+              <a onclick="go('login')">Log In</a>
+              <a onclick="go('signup')">Sign Up</a>
+            </div>
+            <div class="foot-col">
+              <h4>Contact</h4>
+              <a>📍 Gulberg III, Lahore</a>
+              <a>📞 +92 300 123 4567</a>
+              <a>✉️ hello@glazed.pk</a>
+              <a>🕐 9am – 9pm daily</a>
+            </div>
+          </div>
+          <div class="foot-bottom">
+            <span
+              >© 2026 <span>Glazed & Dazed</span>. All rights reserved.</span
+            >
+            <span>Made with 🍩 in Lahore</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ══════════ MENU PAGE ══════════ -->
+    <div class="page" id="page-menu">
+      <div class="page-hero">
+        <h1>Our Full Menu 🍩</h1>
+        <p>All donuts are baked fresh daily. Prices in Pakistani Rupees.</p>
+      </div>
+      <div class="menu-filters">
+        <button class="filter-btn active" onclick="filterMenu('all', this)">
+          All
+        </button>
+        <button class="filter-btn" onclick="filterMenu('classic', this)">
+          Classic
+        </button>
+        <button class="filter-btn" onclick="filterMenu('premium', this)">
+          Premium
+        </button>
+        <button class="filter-btn" onclick="filterMenu('seasonal', this)">
+          Seasonal
+        </button>
+        <button class="filter-btn" onclick="filterMenu('vegan', this)">
+          Vegan
+        </button>
+        <button class="filter-btn" onclick="filterMenu('kids', this)">
+          Kids
+        </button>
+      </div>
+      <div class="menu-body">
+        <div id="menu-grid-container"></div>
+      </div>
+      <footer
+        style="
+          background: var(--brown);
+          color: rgba(255, 255, 255, 0.6);
+          padding: 2rem 3rem;
+          font-size: 0.85rem;
+          text-align: center;
+        "
+      >
+        🍩 <span style="color: var(--pink2)">Glazed & Dazed</span> — Handcrafted
+        with love since 2009
+      </footer>
+    </div>
+
+    <!-- ══════════ CART PAGE ══════════ -->
+    <div class="page" id="page-cart">
+      <div class="cart-wrap">
+        <h1>Your Cart 🛒</h1>
+        <div id="cart-empty-state" class="cart-empty">
+          <span class="empty-icon">🍩</span>
+          <p>Your cart is empty. Time to fix that!</p>
+          <button class="btn-p" onclick="go('menu')">Browse Menu</button>
+        </div>
+        <div id="cart-filled-state" style="display: none">
+          <div id="cart-items-list"></div>
+          <div class="cart-summary">
+            <div class="summary-row">
+              <span>Subtotal</span><span id="cart-sub">Rs. 0</span>
+            </div>
+            <div class="summary-row">
+              <span>Delivery</span><span>Rs. 100</span>
+            </div>
+            <div class="summary-row">
+              <span>Tax (5%)</span><span id="cart-tax">Rs. 0</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span><span id="cart-total">Rs. 0</span>
+            </div>
+            <button class="cart-checkout-btn" onclick="goCheckout()">
+              Proceed to Checkout →
+            </button>
+            <button
+              class="btn-s"
+              style="
+                width: 100%;
+                margin-top: 0.6rem;
+                border-radius: 50px;
+                padding: 12px;
+              "
+              onclick="go('menu')"
+            >
+              + Add More Items
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ CHECKOUT PAGE ══════════ -->
+    <div class="page" id="page-checkout">
+      <div id="checkout-form-wrap">
+        <div class="checkout-wrap">
+          <div class="checkout-left">
+            <h1>Checkout</h1>
+
+            <div class="form-section">
+              <h3>📦 Delivery Details</h3>
+              <div class="f-row">
+                <div class="f-group">
+                  <label>First Name</label
+                  ><input id="co-first" placeholder="Ahmed" />
+                </div>
+                <div class="f-group">
+                  <label>Last Name</label
+                  ><input id="co-last" placeholder="Khan" />
+                </div>
+              </div>
+              <div class="f-group">
+                <label>Email</label
+                ><input
+                  id="co-email"
+                  type="email"
+                  placeholder="you@email.com"
+                />
+              </div>
+              <div class="f-group">
+                <label>Phone</label
+                ><input
+                  id="co-phone"
+                  type="tel"
+                  placeholder="+92 300 0000000"
+                />
+              </div>
+              <div class="f-group">
+                <label>Street Address</label
+                ><input id="co-addr" placeholder="House No., Street, Area" />
+              </div>
+              <div class="f-row">
+                <div class="f-group">
+                  <label>City</label>
+                  <select id="co-city">
+                    <option>Lahore</option>
+                    <option>Karachi</option>
+                    <option>Islamabad</option>
+                    <option>Rawalpindi</option>
+                    <option>Faisalabad</option>
+                  </select>
+                </div>
+                <div class="f-group">
+                  <label>Delivery Time</label>
+                  <select id="co-time">
+                    <option>ASAP (30-45 min)</option>
+                    <option>12:00 PM – 2:00 PM</option>
+                    <option>2:00 PM – 4:00 PM</option>
+                    <option>4:00 PM – 6:00 PM</option>
+                    <option>6:00 PM – 8:00 PM</option>
+                  </select>
+                </div>
+              </div>
+              <div class="f-group">
+                <label>Special Instructions (optional)</label
+                ><textarea
+                  id="co-notes"
+                  placeholder="E.g. Ring the doorbell, leave at gate..."
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h3>💳 Payment Method</h3>
+              <div class="payment-opts">
+                <div class="pay-opt selected" onclick="selectPay(this)">
+                  <input type="radio" name="pay" checked /><span
+                    class="pay-icon"
+                    >💵</span
+                  ><span class="pay-opt-label">Cash on Delivery</span>
+                </div>
+                <div class="pay-opt" onclick="selectPay(this)">
+                  <input type="radio" name="pay" /><span class="pay-icon"
+                    >📱</span
+                  ><span class="pay-opt-label">JazzCash / EasyPaisa</span>
+                </div>
+                <div class="pay-opt" onclick="selectPay(this)">
+                  <input type="radio" name="pay" /><span class="pay-icon"
+                    >💳</span
+                  ><span class="pay-opt-label">Credit / Debit Card</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-right">
+            <div class="order-summary">
+              <h3>Order Summary</h3>
+              <div id="co-items-list"></div>
+              <div class="os-total">
+                <span>Total</span>
+                <span id="co-grand-total">Rs. 0</span>
+              </div>
+              <button class="place-order-btn" onclick="placeOrder()">
+                🍩 Place Order
+              </button>
+              <div class="secure-note">🔒 Secure & encrypted checkout</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="order-success-screen">
+        <div class="success-donut">🍩</div>
+        <h2>Order Placed! 🎉</h2>
+        <p>
+          Your donuts are being freshly made and will be with you soon. You'll
+          get an SMS confirmation shortly.
+        </p>
+        <button class="btn-p" onclick="go('home')">Back to Home</button>
+      </div>
+    </div>
+
+    <!-- ══════════ ABOUT PAGE ══════════ -->
+    <div class="page" id="page-about">
+      <div class="about-hero">
+        <div class="about-hero-text">
+          <span class="sec-tag">Our Story</span>
+          <h1>Baked with love<br />since 2009</h1>
+          <p>
+            What started as a tiny stall in Lahore's Liberty Market has grown
+            into Pakistan's most loved artisan donut brand. But the recipe — and
+            the love — has never changed.
+          </p>
+          <button class="btn-p" onclick="go('menu')">Try Our Donuts</button>
+        </div>
+        <div class="about-hero-visual">🍩</div>
+      </div>
+
+      <div class="about-story">
+        <span class="sec-tag">The Beginning</span>
+        <h2 class="sec-title">A sweet idea that became a movement</h2>
+        <p>
+          In 2009, Chef Fatima Mirza opened a tiny kiosk in Liberty Market with
+          nothing but a borrowed fryer, her grandmother's dough recipe, and a
+          dream. She sold 40 donuts on day one — by week two, she had a queue
+          around the block.
+        </p>
+        <p style="margin-top: 1rem">
+          Today, Glazed & Dazed operates 3 locations across Lahore and delivers
+          to Karachi and Islamabad. Every single donut is still handmade using
+          the same original dough recipe — just scaled up with a lot more love.
+        </p>
+      </div>
+
+      <div class="team">
+        <span class="sec-tag">The Team</span>
+        <h2 class="sec-title">Meet the people behind the magic</h2>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar">FM</div>
+            <div class="team-name">Fatima Mirza</div>
+            <div class="team-role">Founder & Head Baker</div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">ZK</div>
+            <div class="team-name">Zain Khan</div>
+            <div class="team-role">Head of Operations</div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">SA</div>
+            <div class="team-name">Sara Asif</div>
+            <div class="team-role">Flavour Developer</div>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">AR</div>
+            <div class="team-name">Ali Raza</div>
+            <div class="team-role">Delivery & Logistics</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="values">
+        <span class="sec-tag">Our Values</span>
+        <h2 class="sec-title">What we stand for</h2>
+        <div class="values-grid">
+          <div class="val-card">
+            <span class="val-icon">💛</span>
+            <div class="val-title">Honest Ingredients</div>
+            <div class="val-text">
+              No artificial preservatives, no fake flavours. What you taste is
+              exactly what it says on the box.
+            </div>
+          </div>
+          <div class="val-card">
+            <span class="val-icon">🏘️</span>
+            <div class="val-title">Community First</div>
+            <div class="val-text">
+              We source locally, hire locally, and donate 2% of profits to the
+              Edhi Foundation every month.
+            </div>
+          </div>
+          <div class="val-card">
+            <span class="val-icon">🌍</span>
+            <div class="val-title">Sustainability</div>
+            <div class="val-text">
+              100% compostable packaging. We've eliminated all single-use
+              plastic from our operations since 2022.
+            </div>
+          </div>
+          <div class="val-card">
+            <span class="val-icon">✨</span>
+            <div class="val-title">Joy in Every Bite</div>
+            <div class="val-text">
+              We believe food should make you smile. Every donut is made with
+              the intention of brightening your day.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-band">
+        <h2>Come visit us 📍</h2>
+        <p>3 locations in Lahore · Open 9am – 9pm daily · Free parking</p>
+        <button class="btn-p" onclick="go('menu')">Order Online →</button>
+      </div>
+
+      <footer
+        style="
+          background: var(--brown);
+          color: rgba(255, 255, 255, 0.6);
+          padding: 2rem 3rem;
+          font-size: 0.85rem;
+          text-align: center;
+        "
+      >
+        🍩 <span style="color: var(--pink2)">Glazed & Dazed</span> — Handcrafted
+        with love since 2009
+      </footer>
+    </div>
+
+    <!-- ══════════ LOGIN PAGE ══════════ -->
+    <div class="page" id="page-login">
+      <div class="auth-wrap">
+        <div class="auth-side">
+          <div class="auth-side-donut">🍩</div>
+          <h2>Welcome back!</h2>
+          <p>
+            Sign in to order your favourites, track deliveries, and enjoy
+            exclusive member deals.
+          </p>
+        </div>
+        <div class="auth-form-side">
+          <div class="auth-box">
+            <span class="auth-brand">🍩 Glazed & Dazed</span>
+            <h2 class="auth-h">Log In</h2>
+            <p class="auth-sub-text">
+              Good to see you again. Your donuts are waiting!
+            </p>
+            <div class="succ-banner" id="login-succ">
+              ✅ Logged in! Redirecting...
+            </div>
+            <div class="a-group">
+              <label>Email Address</label>
+              <input type="email" id="l-email" placeholder="you@example.com" />
+              <div class="err" id="l-email-err">
+                Please enter a valid email.
+              </div>
+            </div>
+            <div class="a-group">
+              <label>Password</label>
+              <input type="password" id="l-pass" placeholder="••••••••" />
+              <div class="err" id="l-pass-err">
+                Incorrect credentials. Try again.
+              </div>
+            </div>
+            <button class="a-submit" onclick="doLogin()">Log In →</button>
+            <div class="divider-or">or</div>
+            <div class="a-switch">
+              No account? <a onclick="go('signup')">Sign up free</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ SIGNUP PAGE ══════════ -->
+    <div class="page" id="page-signup">
+      <div class="auth-wrap">
+        <div class="auth-side">
+          <div class="auth-side-donut">🍩</div>
+          <h2>Join the family!</h2>
+          <p>
+            Create a free account and get exclusive first-order delivery,
+            loyalty points, and early access to new flavours.
+          </p>
+        </div>
+        <div class="auth-form-side">
+          <div class="auth-box">
+            <span class="auth-brand">🍩 Glazed & Dazed</span>
+            <h2 class="auth-h">Create Account</h2>
+            <p class="auth-sub-text">Free forever. No spam. Just donuts. 🍩</p>
+            <div class="succ-banner" id="su-succ">
+              🎉 Account created! Redirecting to login...
+            </div>
+            <div class="f2-row">
+              <div class="a-group">
+                <label>First Name</label
+                ><input id="su-first" placeholder="Ahmed" />
+                <div class="err" id="su-first-err">Required.</div>
+              </div>
+              <div class="a-group">
+                <label>Last Name</label
+                ><input id="su-last" placeholder="Khan" />
+                <div class="err" id="su-last-err">Required.</div>
+              </div>
+            </div>
+            <div class="a-group">
+              <label>Email</label
+              ><input
+                type="email"
+                id="su-email"
+                placeholder="you@example.com"
+              />
+              <div class="err" id="su-email-err">Enter a valid email.</div>
+            </div>
+            <div class="a-group">
+              <label>Phone</label
+              ><input type="tel" id="su-phone" placeholder="+92 300 0000000" />
+            </div>
+            <div class="a-group">
+              <label>Password</label
+              ><input
+                type="password"
+                id="su-pass"
+                placeholder="Min. 6 characters"
+              />
+              <div class="err" id="su-pass-err">
+                Min. 6 characters required.
+              </div>
+            </div>
+            <div class="a-group">
+              <label>Confirm Password</label
+              ><input
+                type="password"
+                id="su-pass2"
+                placeholder="Repeat password"
+              />
+              <div class="err" id="su-pass2-err">Passwords don't match.</div>
+            </div>
+            <div class="chk-row">
+              <input type="checkbox" id="su-terms" /><label for="su-terms"
+                >I agree to the
+                <a href="#" style="color: var(--pink)"
+                  >Terms & Conditions</a
+                ></label
+              >
+            </div>
+            <div class="err" id="su-terms-err">You must accept the terms.</div>
+            <button class="a-submit" onclick="doSignup()">
+              Create Account →
+            </button>
+            <div class="divider-or">or</div>
+            <div class="a-switch">
+              Already have an account? <a onclick="go('login')">Log in</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast">🍩 Added to cart!</div>
+
+    <script>
+      // ═══════════════════════════════
+      //  DATA
+      // ═══════════════════════════════
+      const DONUTS = [
+        {
+          id: 1,
+          name: "Classic Glazed",
+          emoji: "🍩",
+          desc: "Pillowy soft dough with our signature honey glaze. The OG.",
+          price: 280,
+          cat: "classic",
+        },
+        {
+          id: 2,
+          name: "Strawberry Dream",
+          emoji: "🫐",
+          desc: "Fresh strawberry icing, edible flowers, whipped cream centre.",
+          price: 320,
+          cat: "premium",
+          badge: "Popular",
+        },
+        {
+          id: 3,
+          name: "Choco Bliss",
+          emoji: "🍫",
+          desc: "Double chocolate ganache with crushed hazelnuts on top.",
+          price: 350,
+          cat: "premium",
+          badge: "New",
+        },
+        {
+          id: 4,
+          name: "Matcha Zen",
+          emoji: "🍵",
+          desc: "Japanese matcha glaze with white chocolate drizzle. Earthy & elegant.",
+          price: 340,
+          cat: "premium",
+        },
+        {
+          id: 5,
+          name: "Caramel Crunch",
+          emoji: "🍮",
+          desc: "Salted caramel glaze with house-made toffee brittle shards.",
+          price: 310,
+          cat: "classic",
+          badge: "Best Seller",
+        },
+        {
+          id: 6,
+          name: "Birthday Sprinkle",
+          emoji: "🎉",
+          desc: "Vanilla cream filled, rainbow sprinkled, pure celebration.",
+          price: 290,
+          cat: "kids",
+        },
+        {
+          id: 7,
+          name: "Blueberry Bliss",
+          emoji: "🫐",
+          desc: "Fresh blueberry compote filling with lemon zest glaze.",
+          price: 330,
+          cat: "seasonal",
+          badge: "Seasonal",
+        },
+        {
+          id: 8,
+          name: "Vegan Choco",
+          emoji: "🌱",
+          desc: "100% plant-based dark chocolate donut. Dairy-free & delicious.",
+          price: 360,
+          cat: "vegan",
+          badge: "Vegan",
+        },
+        {
+          id: 9,
+          name: "Peanut Butter Cup",
+          emoji: "🥜",
+          desc: "Peanut butter filling, dark chocolate dip, crushed peanuts.",
+          price: 345,
+          cat: "premium",
+        },
+        {
+          id: 10,
+          name: "Cinnamon Twist",
+          emoji: "🌀",
+          desc: "Classic cinnamon sugar with a maple glaze swirl. Warm & comforting.",
+          price: 275,
+          cat: "classic",
+        },
+        {
+          id: 11,
+          name: "Mango Tango",
+          emoji: "🥭",
+          desc: "Fresh Chaunsa mango glaze with tajin sugar rim. Summer special.",
+          price: 335,
+          cat: "seasonal",
+          badge: "Seasonal",
+        },
+        {
+          id: 12,
+          name: "Mini Party Pack",
+          emoji: "🎊",
+          desc: "6 mini donuts in assorted kids-friendly flavours.",
+          price: 450,
+          cat: "kids",
+        },
+        {
+          id: 13,
+          name: "Lavender Honey",
+          emoji: "💜",
+          desc: "Floral lavender glaze with wildflower honey drizzle.",
+          price: 355,
+          cat: "premium",
+          badge: "New",
+        },
+        {
+          id: 14,
+          name: "Vegan Glazed",
+          emoji: "🌿",
+          desc: "Our classic glazed recipe — fully plant-based. Nobody can tell the difference.",
+          price: 295,
+          cat: "vegan",
+          badge: "Vegan",
+        },
+        {
+          id: 15,
+          name: "Red Velvet",
+          emoji: "❤️",
+          desc: "Red velvet cake donut with cream cheese frosting.",
+          price: 340,
+          cat: "classic",
+          badge: "Popular",
+        },
+        {
+          id: 16,
+          name: "Cookie Monster",
+          emoji: "🍪",
+          desc: "Vanilla glaze, crushed Oreos, and cookie dough filling.",
+          price: 370,
+          cat: "kids",
+          badge: "Kids Fav",
+        },
+      ];
+
+      // ═══════════════════════════════
+      //  STATE
+      // ═══════════════════════════════
+      let cart = [];
+      let isLoggedIn = false;
+      let currentUser = null;
+      const users = {};
+      let currentPage = "home";
+
+      // ═══════════════════════════════
+      //  NAVIGATION
+      // ═══════════════════════════════
+      function go(page) {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("page-" + page).classList.add("active");
+        document
+          .querySelectorAll(".nav-link")
+          .forEach((l) => l.classList.remove("active-link"));
+        const nl = document.getElementById("nl-" + page);
+        if (nl) nl.classList.add("active-link");
+        currentPage = page;
+        window.scrollTo(0, 0);
+        if (page === "cart") renderCart();
+        if (page === "checkout") renderCheckout();
+        if (page === "menu") renderMenuPage();
+      }
+
+      function toggleMob() {
+        document.getElementById("mob-menu").classList.toggle("open");
+      }
+
+      // ═══════════════════════════════
+      //  AUTH
+      // ═══════════════════════════════
+      function updateNav() {
+        const authBtns = document.getElementById("nav-auth-btns");
+        const userInfo = document.getElementById("nav-user-info");
+        const mobLogin = document.getElementById("mob-login");
+        const mobSignup = document.getElementById("mob-signup");
+        const mobLogout = document.getElementById("mob-logout");
+
+        if (isLoggedIn && currentUser) {
+          authBtns.style.display = "none";
+          userInfo.style.display = "flex";
+          const initials = (
+            currentUser.first[0] + currentUser.last[0]
+          ).toUpperCase();
+          document.getElementById("user-avatar").textContent = initials;
+          document.getElementById("user-name-disp").textContent =
+            currentUser.first;
+          mobLogin.style.display = "none";
+          mobSignup.style.display = "none";
+          mobLogout.style.display = "block";
+        } else {
+          authBtns.style.display = "flex";
+          userInfo.style.display = "none";
+          mobLogin.style.display = "block";
+          mobSignup.style.display = "block";
+          mobLogout.style.display = "none";
+        }
+      }
+
+      function logout() {
+        isLoggedIn = false;
+        currentUser = null;
+        cart = [];
+        updateCartCount();
+        updateNav();
+        go("home");
+        showToast("👋 Logged out successfully");
+      }
+
+      function showErr(id, show, msg) {
+        const el = document.getElementById(id);
+        el.classList[show ? "add" : "remove"]("on");
+        if (msg) el.textContent = msg;
+      }
+      function showBanner(id, show) {
+        document.getElementById(id).classList[show ? "add" : "remove"]("on");
+      }
+      function isEmail(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      }
+
+      function doLogin() {
+        const email = document.getElementById("l-email").value.trim();
+        const pass = document.getElementById("l-pass").value;
+        let ok = true;
+        if (!isEmail(email)) {
+          showErr("l-email-err", true, "Please enter a valid email.");
+          ok = false;
+        } else showErr("l-email-err", false);
+        if (pass.length < 1) {
+          showErr("l-pass-err", true, "Please enter your password.");
+          ok = false;
+        } else showErr("l-pass-err", false);
+        if (!ok) return;
+        if (users[email] && users[email].pass === pass) {
+          isLoggedIn = true;
+          currentUser = users[email];
+          updateNav();
+          showBanner("login-succ", true);
+          setTimeout(() => {
+            showBanner("login-succ", false);
+            go("home");
+            showToast("Welcome back, " + currentUser.first + "! 🍩");
+          }, 1200);
+        } else {
+          showErr("l-pass-err", true, "Incorrect email or password.");
+        }
+      }
+
+      function doSignup() {
+        const first = document.getElementById("su-first").value.trim();
+        const last = document.getElementById("su-last").value.trim();
+        const email = document.getElementById("su-email").value.trim();
+        const pass = document.getElementById("su-pass").value;
+        const pass2 = document.getElementById("su-pass2").value;
+        const terms = document.getElementById("su-terms").checked;
+        let ok = true;
+        if (!first) {
+          showErr("su-first-err", true);
+          ok = false;
+        } else showErr("su-first-err", false);
+        if (!last) {
+          showErr("su-last-err", true);
+          ok = false;
+        } else showErr("su-last-err", false);
+        if (!isEmail(email)) {
+          showErr("su-email-err", true, "Enter a valid email.");
+          ok = false;
+        } else if (users[email]) {
+          showErr("su-email-err", true, "Account already exists.");
+          ok = false;
+        } else showErr("su-email-err", false);
+        if (pass.length < 6) {
+          showErr("su-pass-err", true);
+          ok = false;
+        } else showErr("su-pass-err", false);
+        if (pass !== pass2) {
+          showErr("su-pass2-err", true);
+          ok = false;
+        } else showErr("su-pass2-err", false);
+        if (!terms) {
+          showErr("su-terms-err", true);
+          ok = false;
+        } else showErr("su-terms-err", false);
+        if (!ok) return;
+        users[email] = { first, last, email, pass };
+        showBanner("su-succ", true);
+        setTimeout(() => {
+          showBanner("su-succ", false);
+          go("login");
+        }, 1500);
+      }
+
+      // ═══════════════════════════════
+      //  CART
+      // ═══════════════════════════════
+      function addToCart(id) {
+        if (!isLoggedIn) {
+          go("login");
+          showToast("🔐 Please log in to order!");
+          return;
+        }
+        const d = DONUTS.find((x) => x.id === id);
+        const existing = cart.find((x) => x.id === id);
+        if (existing) {
+          existing.qty++;
+        } else {
+          cart.push({ ...d, qty: 1 });
+        }
+        updateCartCount();
+        showToast("🍩 " + d.name + " added to cart!");
+      }
+
+      function updateCartCount() {
+        const total = cart.reduce((s, i) => s + i.qty, 0);
+        const el = document.getElementById("cart-count");
+        if (total > 0) {
+          el.textContent = total;
+          el.style.display = "flex";
+        } else {
+          el.style.display = "none";
+        }
+      }
+
+      function renderCart() {
+        const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        const tax = Math.round(sub * 0.05);
+        const total = sub + 100 + tax;
+
+        document.getElementById("cart-empty-state").style.display =
+          cart.length === 0 ? "block" : "none";
+        document.getElementById("cart-filled-state").style.display =
+          cart.length === 0 ? "none" : "block";
+
+        const list = document.getElementById("cart-items-list");
+        list.innerHTML = cart
+          .map(
+            (item) => `
+    <div class="cart-item">
+      <span class="ci-emoji">${item.emoji}</span>
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-price">Rs. ${item.price} each</div>
+      </div>
+      <div class="ci-qty">
+        <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+        <span class="qty-num">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+      </div>
+      <div class="ci-total">Rs. ${item.price * item.qty}</div>
+      <button class="ci-del" onclick="removeItem(${item.id})" title="Remove">✕</button>
+    </div>
+  `,
+          )
+          .join("");
+
+        document.getElementById("cart-sub").textContent =
+          "Rs. " + sub.toLocaleString();
+        document.getElementById("cart-tax").textContent =
+          "Rs. " + tax.toLocaleString();
+        document.getElementById("cart-total").textContent =
+          "Rs. " + total.toLocaleString();
+      }
+
+      function changeQty(id, delta) {
+        const item = cart.find((x) => x.id === id);
+        if (!item) return;
+        item.qty += delta;
+        if (item.qty <= 0) cart = cart.filter((x) => x.id !== id);
+        updateCartCount();
+        renderCart();
+      }
+
+      function removeItem(id) {
+        cart = cart.filter((x) => x.id !== id);
+        updateCartCount();
+        renderCart();
+      }
+
+      function goCheckout() {
+        if (!isLoggedIn) {
+          go("login");
+          return;
+        }
+        if (cart.length === 0) return;
+        document.getElementById("checkout-form-wrap").style.display = "block";
+        document
+          .getElementById("order-success-screen")
+          .classList.remove("show");
+        go("checkout");
+        if (currentUser) {
+          document.getElementById("co-first").value = currentUser.first || "";
+          document.getElementById("co-last").value = currentUser.last || "";
+          document.getElementById("co-email").value = currentUser.email || "";
+        }
+      }
+
+      function renderCheckout() {
+        const list = document.getElementById("co-items-list");
+        const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        const tax = Math.round(sub * 0.05);
+        const total = sub + 100 + tax;
+        list.innerHTML = cart
+          .map(
+            (i) =>
+              `<div class="os-item"><span>${i.emoji} ${i.name} x${i.qty}</span><span>Rs. ${(i.price * i.qty).toLocaleString()}</span></div>`,
+          )
+          .join("");
+        list.innerHTML += `<div class="os-item"><span>Delivery</span><span>Rs. 100</span></div>`;
+        list.innerHTML += `<div class="os-item"><span>Tax (5%)</span><span>Rs. ${tax}</span></div>`;
+        document.getElementById("co-grand-total").textContent =
+          "Rs. " + total.toLocaleString();
+      }
+
+      function selectPay(el) {
+        document
+          .querySelectorAll(".pay-opt")
+          .forEach((o) => o.classList.remove("selected"));
+        el.classList.add("selected");
+        el.querySelector("input").checked = true;
+      }
+
+      function placeOrder() {
+        const first = document.getElementById("co-first").value.trim();
+        const addr = document.getElementById("co-addr").value.trim();
+        const phone = document.getElementById("co-phone").value.trim();
+        if (!first || !addr || !phone) {
+          showToast("⚠️ Please fill in all required fields!");
+          return;
+        }
+        document.getElementById("checkout-form-wrap").style.display = "none";
+        document.getElementById("order-success-screen").classList.add("show");
+        cart = [];
+        updateCartCount();
+      }
+
+      // ═══════════════════════════════
+      //  MENU RENDER
+      // ═══════════════════════════════
+      function donutCard(d) {
+        const badge = d.badge
+          ? `<div class="d-badge ${d.badge === "New" ? "new-b" : ""}">${d.badge}</div>`
+          : "";
+        return `
+    <div class="d-card" onclick="addToCart(${d.id})">
+      ${badge}
+      <span class="d-emoji">${d.emoji}</span>
+      <div class="d-name">${d.name}</div>
+      <div class="d-desc">${d.desc}</div>
+      <div class="d-foot">
+        <span class="d-price">Rs. ${d.price}</span>
+        <button class="add-c" onclick="event.stopPropagation();addToCart(${d.id})">+</button>
+      </div>
+    </div>`;
+      }
+
+      function renderMenuPage() {
+        const container = document.getElementById("menu-grid-container");
+        const cats = [
+          { key: "classic", label: "Classic Favourites 🍩" },
+          { key: "premium", label: "Premium Selection ✨" },
+          { key: "seasonal", label: "Seasonal Specials 🌸" },
+          { key: "vegan", label: "Vegan Options 🌿" },
+          { key: "kids", label: "Kids Menu 🎉" },
+        ];
+        container.innerHTML = cats
+          .map((c) => {
+            const items = DONUTS.filter((d) => d.cat === c.key);
+            return `<div class="menu-cat" data-cat="${c.key}">
+      <div class="menu-section-title">${c.label}</div>
+      <div class="menu-grid">${items.map(donutCard).join("")}</div>
+    </div>`;
+          })
+          .join("");
+      }
+
+      function filterMenu(cat, btn) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".menu-cat").forEach((c) => {
+          c.style.display =
+            cat === "all" || c.dataset.cat === cat ? "block" : "none";
+        });
+      }
+
+      // ═══════════════════════════════
+      //  HOME FEATURED
+      // ═══════════════════════════════
+      function renderHomeFeat() {
+        const featured = DONUTS.filter((d) => d.badge).slice(0, 6);
+        document.getElementById("home-feat-grid").innerHTML = featured
+          .map(donutCard)
+          .join("");
+      }
+
+      // ═══════════════════════════════
+      //  TOAST
+      // ═══════════════════════════════
+      let toastTimer;
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
+      }
+
+      // ═══════════════════════════════
+      //  KEYBOARD
+      // ═══════════════════════════════
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          if (currentPage === "login") doLogin();
+          if (currentPage === "signup") doSignup();
+        }
+      });
+
+      // ═══════════════════════════════
+      //  INIT
+      // ═══════════════════════════════
+      renderHomeFeat();
+      renderMenuPage();
+      updateNav();
+    </script>
+  </body>
+</html>
